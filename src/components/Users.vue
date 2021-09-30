@@ -1,5 +1,9 @@
 <template>
-    <div class="row">
+
+    <div v-if="loading">
+        <app-loader></app-loader>
+    </div>    
+    <div class="row" v-else>
 
         <div 
             class="col-auto mb-4"
@@ -32,17 +36,23 @@
     export default {
         data(){
             return {
-                users:[]
+                users:[],
+                loading:true
             }
         },
         methods:{
             loadUsers(){
                 axios.get('http://localhost:3004/users')
                 .then( response => {
-                    this.users = response.data
+                    this.users = response.data;
+                    this.loading = false;
                 })
                 .catch( error => {
-                    console.log( error )
+                    this.$toast.error('Oops, something wrong dude,call the admin',{
+                        position:'bottom',
+                        duration:false
+                    });
+                    console.log(error);
                 })
             }  
         },
